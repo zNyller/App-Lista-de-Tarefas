@@ -2,14 +2,13 @@ package com.nyller.projeto2ad.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.nyller.projeto2ad.databinding.ResItemTaskBinding
 import com.nyller.projeto2ad.models.Task
 
 class TaskAdapter(
+    private val onClick : (Task) -> Unit,
     private val onDeleteClick : (Task) -> Unit
 ) :
     RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
@@ -27,10 +26,25 @@ class TaskAdapter(
 
         fun bind(
             task: Task,
-            onDeleteClick: (Task) -> Unit
+            onDeleteClick: (Task) -> Unit,
+            onClick: (Task) -> Unit
         ) {
             tvTaskTitle.text = task.title
             imgBtnDelete.setOnClickListener { onDeleteClick(task) }
+            clTask.setOnClickListener { onClick(task) }
+
+            if (task.done) {
+                tvTaskTitle.setTextColor(ContextCompat.getColor(itemView.context, com.nyller.projeto2ad.R.color.white))
+                imgBtnDelete.setImageResource(com.nyller.projeto2ad.R.drawable.delete_white)
+                clTask.setBackgroundColor(ContextCompat.getColor(itemView.context, com.nyller.projeto2ad.R.color.medium_sea_green))
+            }
+
+            else {
+                tvTaskTitle.setTextColor(ContextCompat.getColor(itemView.context, com.nyller.projeto2ad.R.color.black))
+                imgBtnDelete.setImageResource(com.nyller.projeto2ad.R.drawable.delete_black)
+                clTask.setBackgroundColor(ContextCompat.getColor(itemView.context, com.nyller.projeto2ad.R.color.bright_gray))
+            }
+
         }
 
     }
@@ -47,7 +61,8 @@ class TaskAdapter(
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.bind(
             tasks[position],
-            onDeleteClick
+            onDeleteClick,
+            onClick
         )
     }
 
@@ -63,6 +78,14 @@ class TaskAdapter(
         val deletedPosition = tasks.indexOf(task)   // Encontra a posição da task selecionada na lista
         tasks.remove(task)
         notifyItemRemoved(deletedPosition)
+
+    }
+
+    fun updateTask(task: Task) {
+
+        val updatedPosition = tasks.indexOf(task)
+        tasks[updatedPosition] = task
+        notifyItemChanged(updatedPosition)
 
     }
 

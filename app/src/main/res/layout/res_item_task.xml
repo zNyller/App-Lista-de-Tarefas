@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/clTask"
     android:layout_margin="8dp"
-    android:background="@color/bright_gray">
+    tools:background="@color/bright_gray">
 
     <TextView
         android:id="@+id/tvTaskTitle"
@@ -17,7 +17,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textSize="17sp"
-        android:textColor="@color/black"
+        tools:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgBtnDelete"
         app:layout_constraintStart_toStartOf="parent"
