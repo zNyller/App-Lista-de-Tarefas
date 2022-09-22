@@ -43,9 +43,11 @@ class MainActivity : AppCompatActivity() {
     fun onDataUpdate() = if (adapter.isEmpty()){
         binding.rvTasks.visibility = View.GONE
         binding.tvNoData.visibility = View.VISIBLE
+        binding.imgWind.visibility = View.VISIBLE
     }else {
         binding.rvTasks.visibility = View.VISIBLE
         binding.tvNoData.visibility = View.GONE
+        binding.imgWind.visibility = View.GONE
     }
 
     private fun setupLayout() {

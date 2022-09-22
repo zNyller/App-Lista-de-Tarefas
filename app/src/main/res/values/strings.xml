@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Projeto 2 AD</string>
+    <string name="app_name">Lista de Tarefas</string>
     <string name="titulo_da_tarefa">Título da tarefa</string>
     <string name="descricao_da_tarefa">Descrição da tarefa</string>
     <string name="salvar_tarefa">Salvar tarefa</string>
