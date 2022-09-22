@@ -1,10 +1,15 @@
 package com.nyller.projeto2ad
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.nyller.projeto2ad.adapters.TaskAdapter
+import com.nyller.projeto2ad.constants.Constants.EXTRA_NEW_TASK
 import com.nyller.projeto2ad.databinding.ActivityMainBinding
+import com.nyller.projeto2ad.databinding.ActivityNewTaskBinding
 import com.nyller.projeto2ad.models.Task
 
 class MainActivity : AppCompatActivity() {
@@ -22,16 +27,31 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private val getResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != RESULT_OK) {
+            return@registerForActivityResult
+        }
+
+        val task = result.data?.extras?.getSerializable(EXTRA_NEW_TASK) as Task
+        adapter.addTask(task)
+        onDataUpdate()
+
+    }
+
+    fun onDataUpdate() = if (adapter.isEmpty()){
+        binding.rvTasks.visibility = View.GONE
+        binding.tvNoData.visibility = View.VISIBLE
+    }else {
+        binding.rvTasks.visibility = View.VISIBLE
+        binding.tvNoData.visibility = View.GONE
+    }
+
     private fun setupLayout() {
         binding.fabAddTask.setOnClickListener {
 
-            val rand = (1..90).random()
-
-            adapter.addTask(
-                Task(
-                "Titulo $rand",
-                "Descrição"
-            ))
+            getResult.launch(Intent(this, NewTaskActivity::class.java))
 
         }
     }
@@ -44,19 +64,19 @@ class MainActivity : AppCompatActivity() {
                     adapter.updateTask(taskSelected)
                 }
 
-
             },
             onDeleteClick = { task ->
 
                 showDeleteConfirmation(task) { taskDeleted ->
                     adapter.deleteTask(taskDeleted)
+                    onDataUpdate()
                 }
 
             }
         )
-
         binding.rvTasks.adapter = adapter
         binding.rvTasks.setHasFixedSize(true)
+        onDataUpdate()
 
     }
 
